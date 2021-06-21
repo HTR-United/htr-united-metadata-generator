@@ -5,6 +5,8 @@ from collections import Counter, defaultdict
 from typing import Dict, Counter as CounterType, List, Tuple
 from tabulate import tabulate
 
+UNKNOWN_SEGMENT_TYPE = "Not specified"
+
 
 class Parser:
     def __init__(self):
@@ -42,7 +44,7 @@ class Alto4Parser(Parser):
 
     def get_lines(self, xml: etree.ElementTree) -> CounterType[str]:
         return Counter([
-            self._labels.get(line.attrib.get("TAGREFS", "####"), "UNKNOWN-IDREF")
+            self._labels.get(line.attrib.get("TAGREFS", "####"), UNKNOWN_SEGMENT_TYPE)
             for line in xml.xpath("//a:TextLine", namespaces=self._ns)
         ])
 
@@ -54,7 +56,7 @@ class Alto4Parser(Parser):
 
     def get_regions(self, xml: etree.ElementTree) -> CounterType[str]:
         return Counter([
-            self._labels.get(line.attrib.get("TAGREFS", "####"), "UNKNOWN-IDREF")
+            self._labels.get(line.attrib.get("TAGREFS", "####"), UNKNOWN_SEGMENT_TYPE)
             for line in xml.xpath("//a:TextBlock", namespaces=self._ns)
         ])
 
