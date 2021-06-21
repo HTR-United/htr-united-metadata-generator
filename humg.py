@@ -152,10 +152,10 @@ def run(files, chars: bool = False, group: bool = False, parse: str = "alto"):
         separator()
 
     if group:
-        show_title("Region (Directory)")
+        show_title("Lines (Directory)")
         print_counter_group(group_lines, "Line type")
         separator()
-        show_title("Lines (Directory)")
+        show_title("Regions (Directory)")
         print_counter_group(group_regns, "Region type")
         separator()
 
