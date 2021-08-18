@@ -167,8 +167,8 @@ def run(files, chars: bool = False, group: bool = False, parse: str = "alto"):
     
     if os.getenv("ECHO-GITHUBWORKFLOW"):
         with open("envs.txt", "w") as f:
-            f.write(f"HTRUNITED_LINES={str(sum(total_lines.values()))}"\n)
-            f.write(f"HTRUNITED_REGNS={str(sum(total_regns.values()))}"\n)
+            f.write(f"HTRUNITED_LINES={str(sum(total_lines.values()))}\n")
+            f.write(f"HTRUNITED_REGNS={str(sum(total_regns.values()))}\n")
             f.write(f"HTRUNITED_CHARS={str(sum(total_chars.values()))}")
 
 
