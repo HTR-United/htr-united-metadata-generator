@@ -164,6 +164,9 @@ def run(files, chars: bool = False, group: bool = False, parse: str = "alto"):
     - {count: """+str(sum(total_lines.values()))+""", metric: "lines"}
     - {count: """+str(sum(total_regns.values()))+""", metric: "regions"}
     - {count: """+str(sum(total_chars.values()))+""", metric: "characters"}""", color=True, fg="blue")
+    os.environ["HTRUNITED_LINES"] = str(sum(total_lines.values()))
+    os.environ["HTRUNITED_REGNS"] = str(sum(total_regns.values()))
+    os.environ["HTRUNITED_CHARS"] = str(sum(total_chars.values()))
 
 
 if __name__ == "__main__":
