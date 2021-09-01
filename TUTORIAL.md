@@ -1,25 +1,29 @@
-Tutorial
-========
+Tutorial: How to use HUM to get Badges
+======================================
 
 1. Create a gist with 1 to 3 files (one for lines, one for chars, one regions): 
    1. Go to https://gist.github.com/
-   2. Click on add file as many time as you need
+   2. Click on <kbd>Add file</kbd> so you have three files. Each file will hold data for the badges.
    3. Fill each filename field with a name that is easy to remember, we recommend `chars.json`, `lines.json` and `regions.json`
    4. Fill each file content with just the two following characters: `{}` (Empty json object)
-
+   5. Make sure the gist is Secret, and click on <kbd>Create</kbd>
+ 
 2. Create a secret with access to GIST
    1. Go to https://github.com/settings/tokens/new
    2. Check only the GIST box
    3. Chose the expiration you want to use
+   4. Fill the `Note` field with something clear, such as `HUM Generator Secret`
+   5. Click on <kbd>Generate token</kbd>
+   6. Make sure to copy the code: once it has been created, it won’t be readable in your interface after you saved it for security reason
 
-3. Make sure to copy the code: once it has been created, it won’t be readable in your interface after you saved it for security reason
+3. Register the secret in your github repository
    1. Add it to the repository you want to “badge” and call it `GIST_SECRET`
-   2. Got to https://github.com/username/yourrepo/settings/secrets/actions
-   3. Click on “New repository secret”
+   2. Go to your repository, then to <kbd>Settings</kbd>, <kbd>Secrets</kbd> https://github.com/username/yourrepo/settings/secrets/actions
+   3. Click on <kbd>New repository secret</kbd>
    4. Set the name to GIST_SECRET
-   5. Set the value from Step 2.
+   5. Paste the value from Step 2.
 
-4. Edit your .github/workflow using HUM-Generator and add both a “ECHO-GITHUBWORKFLOW” environment value and a new line after humGenerator is run: `cat envs.txt >> $GITHUB_ENV`
+4. Edit your `.github/workflows/humGenerator.yaml` using HUM-Generator and add both a “ECHO-GITHUBWORKFLOW” environment value and a new line after humGenerator is run: `cat envs.txt >> $GITHUB_ENV`
 
 ```yaml
    - name: Run Report
@@ -29,6 +33,7 @@ Tutorial
       # Back to the "simple" configuration
       run: |
         humGenerator --group fra/**/*.xml lat/**/*.xml
+        # This line is new :
         cat envs.txt >> $GITHUB_ENV
 ```
 
