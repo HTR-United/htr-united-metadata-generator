@@ -1,4 +1,4 @@
-# htr-united-metadata-generator
+# HUM Generator, the HTR United Metadata Generator
 Tool that generates, through github actions, a set of metadata to help document repos.
 
 # Install as github action
