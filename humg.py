@@ -144,7 +144,8 @@ def separator():
 @click.option("-c", "--chars", default=False, is_flag=True, help="Show chars")
 @click.option("-g", "--group", default=False, is_flag=True, help="Group by directory for logs")
 @click.option("--parse", type=click.Choice(["alto", "page"]), default="alto")
-def run(files, chars: bool = False, group: bool = False, parse: str = "alto"):
+@click.option("--github-envs", default=False, is_flag=True)
+def run(files, chars: bool = False, group: bool = False, parse: str = "alto", github_envs: bool = False):
     parser: Parser = None
     if parse == "alto":
         parser = Alto4Parser()
@@ -199,15 +200,16 @@ def run(files, chars: bool = False, group: bool = False, parse: str = "alto"):
     show_title("Yaml Cataloging Details for HTR United")
     click.secho("""volume:
     - {count: """+str(sum(total_lines.values()))+""", metric: "lines"}
+    - {count: """+str(len(files))+""", metric: "files"}
     - {count: """+str(sum(total_regns.values()))+""", metric: "regions"}
     - {count: """+str(sum(total_chars.values()))+""", metric: "characters"}""", color=True, fg="blue")
     
-    if os.getenv("ECHO-GITHUBWORKFLOW"):
+    if github_envs:
         with open("envs.txt", "w") as f:
             f.write(f"HTRUNITED_LINES={str(sum(total_lines.values()))}\n")
             f.write(f"HTRUNITED_REGNS={str(sum(total_regns.values()))}\n")
-            f.write(f"HTRUNITED_CHARS={str(sum(total_chars.values()))}")
-
+            f.write(f"HTRUNITED_CHARS={str(sum(total_chars.values()))}\n")
+            f.write(f"HTRUNITED_FILES={len(files)}\n")
 
 if __name__ == "__main__":
     run()

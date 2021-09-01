@@ -23,16 +23,14 @@ Tutorial: How to use HUM to get Badges
    4. Set the name to GIST_SECRET
    5. Paste the value from Step 2.
 
-4. Edit your `.github/workflows/humGenerator.yaml` using HUM-Generator and add both a “ECHO-GITHUBWORKFLOW” environment value and a new line after humGenerator is run: `cat envs.txt >> $GITHUB_ENV`
+4. Edit your Github Workflow using HUM-Generator 
+   1. Add the parameter `--github-envs` to your humGenerator line
+   2. Add the line `cat envs.txt >> $GITHUB_ENV` after your `humGenerator` command:
 
 ```yaml
    - name: Run Report
-      # The two following lines are new
-      env:
-        ECHO-GITHUBWORKFLOW: "YES"
-      # Back to the "simple" configuration
       run: |
-        humGenerator --group fra/**/*.xml lat/**/*.xml
+        humGenerator --group fra/**/*.xml lat/**/*.xml --github-envs
         # This line is new :
         cat envs.txt >> $GITHUB_ENV
 ```
