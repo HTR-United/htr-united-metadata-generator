@@ -39,7 +39,6 @@ class Alto4Parser(Parser):
             node.attrib["ID"]: node.attrib["LABEL"]
             for node in xml.xpath("//a:OtherTag", namespaces=self._ns)
         }
-
         return xml
 
     def get_lines(self, xml: etree.ElementTree) -> CounterType[str]:
@@ -58,6 +57,36 @@ class Alto4Parser(Parser):
         return Counter([
             self._labels.get(line.attrib.get("TAGREFS", "####"), UNKNOWN_SEGMENT_TYPE)
             for line in xml.xpath("//a:TextBlock", namespaces=self._ns)
+        ])
+
+
+class Page2019Parser(Parser):
+    def __init__(self):
+        super(Page2019Parser, self).__init__()
+        self._ns = {"p": "http://schema.primaresearch.org/PAGE/gts/pagecontent/2019-07-15"}
+        self._labels: Dict[str, str] = {}
+
+    def parse(self, filepath: str) -> etree.ElementTree:
+        #TODO: There's no equivalent to alto's //OtherTag in PAGEXML
+        xml = etree.parse(filepath)
+        return xml
+
+    def get_lines(self, xml: etree.ElementTree) -> CounterType[str]:
+        return Counter([
+            handle_custom_type(line.attrib.get("custom", UNKNOWN_SEGMENT_TYPE))
+            for line in xml.xpath("//p:TextLine", namespaces=self._ns)
+        ])
+
+    def get_chars(self, xml: etree.ElementTree) -> CounterType[str]:
+        return Counter("".join([
+            str(line.text)
+            for line in xml.xpath("//p:TextLine/p:TextEquiv/p:Unicode", namespaces=self._ns)
+        ]).replace(" ", ""))
+
+    def get_regions(self, xml: etree.ElementTree) -> CounterType[str]:
+        return Counter([
+            handle_custom_type(line.attrib.get("custom", UNKNOWN_SEGMENT_TYPE))
+            for line in xml.xpath("//p:TextRegion", namespaces=self._ns)
         ])
 
 
@@ -104,15 +133,24 @@ def separator():
     print("\n\n")
 
 
+def handle_custom_type(value: str) -> str:
+    # there's no equivalent to TAGREFS in PAGEXML
+    # eScriptorium stores this info in @custom with value formed such as:
+    # custom="structure {type:MYTAG ;}"
+    return value.replace("structure {type:", "").replace(";}", "").strip()
+
+
 @click.command()
 @click.argument("files", nargs=-1)
 @click.option("-c", "--chars", default=False, is_flag=True, help="Show chars")
 @click.option("-g", "--group", default=False, is_flag=True, help="Group by directory for logs")
-@click.option("--parse", type=click.Choice(["alto"]), default="alto")
+@click.option("--parse", type=click.Choice(["alto", "page"]), default="alto")
 def run(files, chars: bool = False, group: bool = False, parse: str = "alto"):
     parser: Parser = None
     if parse == "alto":
         parser = Alto4Parser()
+    elif parse == "page":
+        parser = Page2019Parser()
 
     total_chars = Counter()
     total_lines = Counter()
