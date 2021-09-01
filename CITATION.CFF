@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Clérice
+    given-names: Thibault
+    orcid: https://orcid.org/0000-0002-0136-4434
+  - family-names: "Chagué"
+    given-names: "Alix"
+    orcid: "https://orcid.org/0000-0002-0136-4434"
+title: "HUM Generator, the HTR United Metadata Generator"
+version: 0.0.1
+doi: 10.5281/zenodo.5363307
+date-released: 2021-09-01
+url: "https://github.com/HTR-United/htr-united-metadata-generator"
