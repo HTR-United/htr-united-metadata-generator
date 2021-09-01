@@ -3,6 +3,8 @@ Tool that generates, through github actions, a set of metadata to help document 
 
 # Install as github action
 
+If you want to use badge, see [the tutorial](TUTORIAL.md)
+
 In the directory .github/workflows, create a file HumGenerator with the following content
 
 ```yaml
@@ -30,4 +32,3 @@ jobs:
       run: |
         humGenerator --group **/*.xml
 ```
-
