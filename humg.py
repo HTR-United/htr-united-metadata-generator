@@ -73,7 +73,7 @@ class Page2019Parser(Parser):
 
     def get_lines(self, xml: etree.ElementTree) -> CounterType[str]:
         return Counter([
-            handle_custom_type(line.attrib.get("custom", UNKNOWN_SEGMENT_TYPE))
+            self._handle_custom_type(line.attrib.get("custom", UNKNOWN_SEGMENT_TYPE))
             for line in xml.xpath("//p:TextLine", namespaces=self._ns)
         ])
 
@@ -85,10 +85,16 @@ class Page2019Parser(Parser):
 
     def get_regions(self, xml: etree.ElementTree) -> CounterType[str]:
         return Counter([
-            handle_custom_type(line.attrib.get("custom", UNKNOWN_SEGMENT_TYPE))
+            self._handle_custom_type(line.attrib.get("custom", UNKNOWN_SEGMENT_TYPE))
             for line in xml.xpath("//p:TextRegion", namespaces=self._ns)
         ])
-
+    
+    @staticmethod
+    def _handle_custom_type(value: str) -> str:
+        # there's no equivalent to TAGREFS in PAGEXML
+        # eScriptorium stores this info in @custom with value formed such as:
+        # custom="structure {type:MYTAG ;}"
+        return value.replace("structure {type:", "").replace(";}", "").strip()
 
 def sort_counter(counter: CounterType[str], item_place: int = 1) -> List[Tuple[str, int]]:
     return sorted(list(counter.items()), key=lambda x: x[item_place], reverse=True)
@@ -131,13 +137,6 @@ def print_counter_group(counters: Dict[str, CounterType[str]], category: str) ->
 
 def separator():
     print("\n\n")
-
-
-def handle_custom_type(value: str) -> str:
-    # there's no equivalent to TAGREFS in PAGEXML
-    # eScriptorium stores this info in @custom with value formed such as:
-    # custom="structure {type:MYTAG ;}"
-    return value.replace("structure {type:", "").replace(";}", "").strip()
 
 
 @click.command()
