@@ -17,11 +17,10 @@ Tutorial: How to use HUM to get Badges
    6. Make sure to copy the code: once it has been created, it won’t be readable in your interface after you saved it for security reason
 
 3. Register the secret in your github repository
-   1. Add it to the repository you want to “badge” and call it `GIST_SECRET`
-   2. Go to your repository, then to <kbd>Settings</kbd>, <kbd>Secrets</kbd> https://github.com/username/yourrepo/settings/secrets/actions
-   3. Click on <kbd>New repository secret</kbd>
-   4. Set the name to GIST_SECRET
-   5. Paste the value from Step 2.
+   1. Go to your repository, then to <kbd>Settings</kbd>, <kbd>Secrets</kbd> https://github.com/username/yourrepo/settings/secrets/actions
+   2. Click on <kbd>New repository secret</kbd>
+   3. Set the name to GIST_SECRET
+   4. Paste the value from Step 2.
 
 4. Edit your Github Workflow using HUM-Generator 
    1. Add the parameter `--github-envs` to your humGenerator line
@@ -50,11 +49,14 @@ Tutorial: How to use HUM to get Badges
         style: "flat-square"
 ```
 
-6. Finally, in your README.md, add new badges, replacing <gistID>, <fileName> and <userName> in the following markdown code:
+6. Finally, to show them in your README.md:
+   1. Open your README.mD
+   2. For each badge you create in (5), add the following line (don't forget to replace <gistID>, <fileName> and <userName>):
 
 ```markdown
 ![Region Badges](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/<userName>/<gistID>/raw/<fileName>)
 ```
+   3. Save and commit your file !
 
 See the example at [Cremma-16-17-Print](https://github.com/HTR-United/cremma-16-17-print/blob/a09a691a4635ada9eb1b57cb030597dc882d9755/.github/workflows/humGenerator.yml)
 
