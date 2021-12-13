@@ -51,7 +51,7 @@ Tutorial: How to use HUM to get Badges
 
 6. Finally, to show them in your README.md:
    1. Open your README.mD
-   2. For each badge you create in (5), add the following line (don't forget to replace <gistID>, <fileName> and <userName>):
+   2. For each badge you create in (5), add the following line (don't forget to replace `<gistID>`, `<fileName>` and `<userName>`):
 
 ```markdown
 ![Region Badges](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/<userName>/<gistID>/raw/<fileName>)
