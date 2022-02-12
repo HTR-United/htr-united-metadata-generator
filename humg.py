@@ -1,4 +1,5 @@
 import os
+import json
 import click
 from lxml import etree
 from collections import Counter, defaultdict
@@ -67,7 +68,7 @@ class Page2019Parser(Parser):
         self._labels: Dict[str, str] = {}
 
     def parse(self, filepath: str) -> etree.ElementTree:
-        #TODO: There's no equivalent to alto's //OtherTag in PAGEXML
+        # TODO: There's no equivalent to alto's //OtherTag in PAGEXML
         xml = etree.parse(filepath)
         return xml
 
@@ -88,13 +89,14 @@ class Page2019Parser(Parser):
             self._handle_custom_type(line.attrib.get("custom", UNKNOWN_SEGMENT_TYPE))
             for line in xml.xpath("//p:TextRegion", namespaces=self._ns)
         ])
-    
+
     @staticmethod
     def _handle_custom_type(value: str) -> str:
         # there's no equivalent to TAGREFS in PAGEXML
         # eScriptorium stores this info in @custom with value formed such as:
         # custom="structure {type:MYTAG ;}"
         return value.replace("structure {type:", "").replace(";}", "").strip()
+
 
 def sort_counter(counter: CounterType[str], item_place: int = 1) -> List[Tuple[str, int]]:
     return sorted(list(counter.items()), key=lambda x: x[item_place], reverse=True)
@@ -109,9 +111,9 @@ def print_counter(counter: CounterType[str], category: str) -> None:
 
 
 def show_title(title):
-    click.echo("#"*int(len(title)*1.5))
+    click.echo("#" * int(len(title) * 1.5))
     click.secho("#  " + title, color=True, fg="yellow")
-    click.echo("#"*int(len(title)*1.5))
+    click.echo("#" * int(len(title) * 1.5))
     click.echo()
 
 
@@ -145,7 +147,9 @@ def separator():
 @click.option("-g", "--group", default=False, is_flag=True, help="Group by directory for logs")
 @click.option("--parse", type=click.Choice(["alto", "page"]), default="alto")
 @click.option("--github-envs", default=False, is_flag=True)
-def run(files, chars: bool = False, group: bool = False, parse: str = "alto", github_envs: bool = False):
+@click.option("--to-json)", type=click.File("w"), default=False, is_flag=True)
+def run(files, chars: bool = False, group: bool = False, parse: str = "alto", github_envs: bool = False,
+        to_json = None):
     parser: Parser = None
     if parse == "alto":
         parser = Alto4Parser()
@@ -199,17 +203,26 @@ def run(files, chars: bool = False, group: bool = False, parse: str = "alto", gi
 
     show_title("Yaml Cataloging Details for HTR United")
     click.secho("""volume:
-    - {count: """+str(sum(total_lines.values()))+""", metric: "lines"}
-    - {count: """+str(len(files))+""", metric: "files"}
-    - {count: """+str(sum(total_regns.values()))+""", metric: "regions"}
-    - {count: """+str(sum(total_chars.values()))+""", metric: "characters"}""", color=True, fg="blue")
-    
+    - {count: """ + str(sum(total_lines.values())) + """, metric: "lines"}
+    - {count: """ + str(len(files)) + """, metric: "files"}
+    - {count: """ + str(sum(total_regns.values())) + """, metric: "regions"}
+    - {count: """ + str(sum(total_chars.values())) + """, metric: "characters"}""", color=True, fg="blue")
+
     if github_envs:
         with open("envs.txt", "w") as f:
             f.write(f"HTRUNITED_LINES={str(sum(total_lines.values()))}\n")
             f.write(f"HTRUNITED_REGNS={str(sum(total_regns.values()))}\n")
             f.write(f"HTRUNITED_CHARS={str(sum(total_chars.values()))}\n")
             f.write(f"HTRUNITED_FILES={len(files)}\n")
+    if to_json is not None:
+        json.dump(
+            {"lines": str(sum(total_lines.values())),
+             "files": str(len(files)),
+             "regions": str(sum(total_regns.values())),
+             "characters": str(sum(total_chars.values()))},
+            to_json
+        )
+
 
 if __name__ == "__main__":
     run()
