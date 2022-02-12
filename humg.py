@@ -215,11 +215,11 @@ def run(files, chars: bool = False, group: bool = False, parse: str = "alto", gi
             f.write(f"HTRUNITED_CHARS={str(sum(total_chars.values()))}\n")
             f.write(f"HTRUNITED_FILES={len(files)}\n")
     if to_json is not None:
-        json.dump(
+        json.dump([
             {"lines": str(sum(total_lines.values())),
              "files": str(len(files)),
              "regions": str(sum(total_regns.values())),
-             "characters": str(sum(total_chars.values()))},
+             "characters": str(sum(total_chars.values()))}],
             to_json
         )
 
