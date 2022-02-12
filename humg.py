@@ -147,7 +147,7 @@ def separator():
 @click.option("-g", "--group", default=False, is_flag=True, help="Group by directory for logs")
 @click.option("--parse", type=click.Choice(["alto", "page"]), default="alto")
 @click.option("--github-envs", default=False, is_flag=True)
-@click.option("--to-json)", type=click.File("w"), default=False, is_flag=True)
+@click.option("--to-json", type=click.File("w"), default=False, is_flag=True)
 def run(files, chars: bool = False, group: bool = False, parse: str = "alto", github_envs: bool = False,
         to_json = None):
     parser: Parser = None

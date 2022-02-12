@@ -16,10 +16,10 @@ here = os.path.abspath(os.path.dirname(__file__))
 # Package meta-data.
 NAME = 'htr-united-metadata-generator'
 DESCRIPTION = 'A cool tool to generate report for HTR repositories'
-URL = 'https://github.com/htr-united/htr-united-metadta-generator'
+URL = 'https://github.com/htr-united/htr-united-metadata-generator'
 AUTHOR = 'Thibault Clerice'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = "0.0.2"
+VERSION = "0.0.3"
 
 # What packages are required for this module to be executed?
 
