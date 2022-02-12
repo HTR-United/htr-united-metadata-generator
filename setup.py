@@ -19,7 +19,7 @@ DESCRIPTION = 'A cool tool to generate report for HTR repositories'
 URL = 'https://github.com/htr-united/htr-united-metadata-generator'
 AUTHOR = 'Thibault Clerice'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = "0.0.6"
+VERSION = "0.0.7"
 
 # What packages are required for this module to be executed?
 

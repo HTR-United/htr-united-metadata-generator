@@ -217,10 +217,10 @@ def run(files, chars: bool = False, group: bool = False, parse: str = "alto", gi
     if to_json is not None:
         json.dump(
             [
-                {"metric": "lines", "count": str(sum(total_lines.values()))},
-                {"metric": "files", "count": str(len(files))},
-                {"metric": "regions", "count": str(sum(total_regns.values()))},
-                {"metric": "characters", "count": str(sum(total_chars.values()))}
+                {"metric": "lines", "count": sum(total_lines.values())},
+                {"metric": "files", "count": len(files)},
+                {"metric": "regions", "count": sum(total_regns.values())},
+                {"metric": "characters", "count": sum(total_chars.values())}
             ],
             to_json
         )
