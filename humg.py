@@ -75,19 +75,19 @@ class Page2019Parser(Parser):
     def get_lines(self, xml: etree.ElementTree) -> CounterType[str]:
         return Counter([
             self._handle_custom_type(line.attrib.get("custom", UNKNOWN_SEGMENT_TYPE))
-            for line in xml.xpath("//p:TextLine", namespaces=self._ns)
+            for line in xml.findall("//{*}TextLine", namespaces=self._ns)
         ])
 
     def get_chars(self, xml: etree.ElementTree) -> CounterType[str]:
         return Counter("".join([
             str(line.text)
-            for line in xml.xpath("//p:TextLine/p:TextEquiv/p:Unicode", namespaces=self._ns)
+            for line in xml.findall("//{*}TextLine/{*}TextEquiv/{*}Unicode", namespaces=self._ns)
         ]).replace(" ", ""))
 
     def get_regions(self, xml: etree.ElementTree) -> CounterType[str]:
         return Counter([
             self._handle_custom_type(line.attrib.get("custom", UNKNOWN_SEGMENT_TYPE))
-            for line in xml.xpath("//p:TextRegion", namespaces=self._ns)
+            for line in xml.findall("//{*}TextRegion", namespaces=self._ns)
         ])
 
     @staticmethod
