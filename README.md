@@ -1,3 +1,5 @@
+<img src="./img/humgenerator.png" width="300" align="right">
+
 # HUM Generator, the HTR United Metadata Generator
 Tool that generates, through github actions, a set of metadata to help document repos.
 
