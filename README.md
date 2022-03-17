@@ -34,3 +34,8 @@ jobs:
       run: |
         humGenerator --group **/*.xml
 ```
+
+
+---
+
+Logo by [Alix Chagué](https://alix-tz.github.io).
