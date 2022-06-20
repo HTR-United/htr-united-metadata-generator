@@ -3,17 +3,24 @@ import json
 import click
 from lxml import etree
 from collections import Counter, defaultdict
-from typing import Dict, Counter as CounterType, List, Tuple
+from typing import Dict, Counter as CounterType, List, Tuple, Optional
 from tabulate import tabulate
+from unicodedata import normalize
 
 UNKNOWN_SEGMENT_TYPE = "Not specified"
 
 
 class Parser:
-    def __init__(self):
+    def __init__(self, normalization: Optional[str] = None):
         self.lines: Dict[str, int] = Counter()
         self.chars: Dict[str, int] = Counter()
         self.regions: Dict[str, int] = Counter()
+        self._normalization: Optional[str] = normalization
+
+    def normalize(self, string: str) -> str:
+        if self._normalization:
+            return normalize(self._normalization, string)
+        return string
 
     def get_lines(self, xml: etree.ElementTree) -> Dict[str, int]:
         raise NotImplementedError
@@ -29,8 +36,8 @@ class Parser:
 
 
 class Alto4Parser(Parser):
-    def __init__(self):
-        super(Alto4Parser, self).__init__()
+    def __init__(self, normalization: Optional[str] = None):
+        super(Alto4Parser, self).__init__(normalization)
         self._ns = {"a": "http://www.loc.gov/standards/alto/ns-v4#"}
         self._labels: Dict[str, str] = {}
 
@@ -50,7 +57,7 @@ class Alto4Parser(Parser):
 
     def get_chars(self, xml: etree.ElementTree) -> CounterType[str]:
         return Counter("".join([
-            str(line)
+            self.normalize(str(line))
             for line in xml.xpath("//a:TextLine/a:String/@CONTENT", namespaces=self._ns)
         ]).replace(" ", ""))
 
@@ -62,8 +69,8 @@ class Alto4Parser(Parser):
 
 
 class Page2019Parser(Parser):
-    def __init__(self):
-        super(Page2019Parser, self).__init__()
+    def __init__(self, normalization: Optional[str] = None):
+        super(Page2019Parser, self).__init__(normalization)
         self._ns = {"p": "http://schema.primaresearch.org/PAGE/gts/pagecontent/2019-07-15"}
         self._labels: Dict[str, str] = {}
 
@@ -80,7 +87,7 @@ class Page2019Parser(Parser):
 
     def get_chars(self, xml: etree.ElementTree) -> CounterType[str]:
         return Counter("".join([
-            str(line.text)
+            self.normalize(str(line))
             for line in xml.findall("//{*}TextLine/{*}TextEquiv/{*}Unicode", namespaces=self._ns)
         ]).replace(" ", ""))
 
@@ -143,18 +150,25 @@ def separator():
 
 @click.command()
 @click.argument("files", nargs=-1)
-@click.option("-c", "--chars", default=False, is_flag=True, help="Show chars")
+@click.option("-c", "--chars", default=False, is_flag=True, help="Count chars")
+@click.option("-n", "--normalization", default=None,
+              type=click.Choice(["NFC", "NFKC", "NFD", "NFKD"], case_sensitive=False),
+              help="Normalize strings before counting chars. Recommended NF(K)D for Latin and Greek scripts.")
 @click.option("-g", "--group", default=False, is_flag=True, help="Group by directory for logs")
 @click.option("--parse", type=click.Choice(["alto", "page"]), default="alto")
 @click.option("--github-envs", default=False, is_flag=True)
 @click.option("--to-json", type=click.File("w"), default=None)
 def run(files, chars: bool = False, group: bool = False, parse: str = "alto", github_envs: bool = False,
-        to_json = None):
+        to_json: Optional[click.File] = None, normalization: Optional[str] = None):
+
+    if normalization:
+        normalization = normalization.upper()
+
     parser: Parser = None
     if parse == "alto":
-        parser = Alto4Parser()
+        parser = Alto4Parser(normalization=normalization)
     elif parse == "page":
-        parser = Page2019Parser()
+        parser = Page2019Parser(normalization=normalization)
 
     total_chars = Counter()
     total_lines = Counter()
@@ -215,13 +229,28 @@ def run(files, chars: bool = False, group: bool = False, parse: str = "alto", gi
             f.write(f"HTRUNITED_CHARS={str(sum(total_chars.values()))}\n")
             f.write(f"HTRUNITED_FILES={len(files)}\n")
     if to_json is not None:
-        json.dump(
-            [
+        # chars as keys from total_chars
+        volume = {
+            "volume": [
                 {"metric": "lines", "count": sum(total_lines.values())},
                 {"metric": "files", "count": len(files)},
                 {"metric": "regions", "count": sum(total_regns.values())},
                 {"metric": "characters", "count": sum(total_chars.values())}
-            ],
+            ]
+        }
+        characters = {}
+        if chars:
+            characters = {
+                "characters": {
+                    "mode": "None" if not normalization else normalization,
+                    "members": list(dict(sort_counter(total_chars)).keys())
+                }
+            }
+        json.dump(
+            {
+                **volume,
+                **characters
+            },
             to_json
         )
 
