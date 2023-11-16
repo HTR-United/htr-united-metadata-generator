@@ -127,6 +127,17 @@ def show_title(title):
 def print_counter_group(counters: Dict[str, CounterType[str]], category: str) -> None:
     table = []
     total = 0
+    # In case we don't have a category, we merge subcategories
+    if category is None:
+        for directory, counter in counters.items():
+            table.append((directory, sum(counter.values())))
+        print(tabulate(
+            table,
+            headers=["Directory", "Count"],
+            tablefmt="pipe"
+        ))
+        return
+
     for directory, counter in counters.items():
         cnter = sort_counter(counter, 0)  # We sort per category here
         for idx, (key, cnt) in enumerate(cnter):
@@ -213,6 +224,9 @@ def run(files, chars: bool = False, group: bool = False, parse: str = "alto", gi
         separator()
         show_title("Regions (Directory)")
         print_counter_group(group_regns, "Region type")
+        separator()
+        show_title("Chars (Directory)")
+        print_counter_group(group_chars, None)
         separator()
 
     show_title("Yaml Cataloging Details for HTR United")
