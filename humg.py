@@ -87,7 +87,7 @@ class Page2019Parser(Parser):
 
     def get_chars(self, xml: etree.ElementTree) -> CounterType[str]:
         return Counter("".join([
-            self.normalize(str(line))
+            self.normalize(str(line.text))
             for line in xml.findall("//{*}TextLine/{*}TextEquiv/{*}Unicode", namespaces=self._ns)
         ]).replace(" ", ""))
 
