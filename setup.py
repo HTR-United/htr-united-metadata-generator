@@ -18,8 +18,8 @@ NAME = 'htr-united-metadata-generator'
 DESCRIPTION = 'A cool tool to generate report for HTR repositories'
 URL = 'https://github.com/htr-united/htr-united-metadata-generator'
 AUTHOR = 'Thibault Clerice'
-REQUIRES_PYTHON = '>=3.6.0'
-VERSION = "1.0.4"
+REQUIRES_PYTHON = '>=3.12.0'
+VERSION = "1.0.5"
 
 # What packages are required for this module to be executed?
 
@@ -118,7 +118,7 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.12',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Text Processing :: Linguistic'

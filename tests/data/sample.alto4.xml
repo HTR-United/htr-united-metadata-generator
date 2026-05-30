@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<alto xmlns="http://www.loc.gov/standards/alto/ns-v4#">
+  <Description>
+    <MeasurementUnit>pixel</MeasurementUnit>
+  </Description>
+  <Tags>
+    <OtherTag ID="TYPE_1" LABEL="MainZone" DESCRIPTION=""/>
+    <OtherTag ID="TYPE_2" LABEL="NumberingZone" DESCRIPTION=""/>
+  </Tags>
+  <Layout>
+    <Page WIDTH="1000" HEIGHT="1500" PHYSICAL_IMG_NR="1" ID="page_1">
+      <PrintSpace>
+        <TextBlock ID="block_1" TAGREFS="TYPE_1">
+          <TextLine ID="line_1" TAGREFS="TYPE_2">
+            <String CONTENT="Hello world"/>
+          </TextLine>
+          <TextLine ID="line_2" TAGREFS="TYPE_1">
+            <String CONTENT="Bonjour"/>
+          </TextLine>
+        </TextBlock>
+      </PrintSpace>
+    </Page>
+  </Layout>
+</alto>
